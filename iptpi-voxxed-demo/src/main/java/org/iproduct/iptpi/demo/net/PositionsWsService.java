@@ -83,7 +83,7 @@ public class PositionsWsService {
 		httpServer = NetStreams.<Buffer, Buffer>httpServer((HttpServerSpec<Buffer,Buffer> serverSpec) -> 
 			serverSpec
 //				.httpProcessor(CodecPreprocessor.from(StandardCodecs.STRING_CODEC))
-				.listen("192.168.0.108", 80) );
+				.listen("172.22.0.68", 80) );
 		httpServer.get("/", getStaticResourceHandler());
 		httpServer.get("/index.html", getStaticResourceHandler());
 		httpServer.get("/app/**", getStaticResourceHandler());
