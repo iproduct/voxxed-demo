@@ -7,7 +7,8 @@ The main application component class AppComponent is in src/main/webapp/app fold
 
 There are two types of clients - embedded client using Java Swing (whole screen mode) and mobile web client using Angular 2 (TypereScript) and RxJS:
 
- - The emebedded Swing client is in class RobotView (https://github.com/iproduct/voxxed-demo/blob/master/iptpi-voxxed-demo/src/main/java/org/iproduct/iptpi/demo/view/RobotView.java)  - The web client (ng2 + RxJS) is in src/main/webapp folder (https://github.com/iproduct/voxxed-demo/tree/master/iptpi-voxxed-demo/src/main/webapp)
+ - The emebedded Swing client is in class RobotView (https://github.com/iproduct/voxxed-demo/blob/master/iptpi-voxxed-demo/src/main/java/org/iproduct/iptpi/demo/view/RobotView.java)  
+ - The web client (ng2 + RxJS) is in src/main/webapp folder (https://github.com/iproduct/voxxed-demo/tree/master/iptpi-voxxed-demo/src/main/webapp)
  
 The main ng2 application component class AppComponent is in src/main/webapp/app folder, together with custom reactive WebSocket implementation - IPTRxWebSocketSubject component. IPTRxWebSocketSubject is exposing WebSocket as RxJS bidirectional subject (by idea from RxDOM), plus reactive WebSocket open and close observers.
 
