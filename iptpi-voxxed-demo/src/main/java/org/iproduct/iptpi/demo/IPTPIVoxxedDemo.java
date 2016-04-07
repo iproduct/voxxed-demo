@@ -32,11 +32,11 @@ public class IPTPIVoxxedDemo {
 		positionsPub = PositionFactory.createPositionFluxion(arduino);
 		presentationViews.add(PositionFactory.createPositionPanel(positionsPub));
 		
-		//wire controller with services
+		//wire robot main controller with services
 		movementSub = MovementFactory.createCommnadMotorsSubscriber(positionsPub);
 		controller = new RobotController(Subscribers.consumer(this::tearDown), movementSub);
 		
-		//create view wiht controller and delegate material views from query services
+		//create view with controller and delegate material views from query services
 		view = new RobotView("IPTPI Reactive Robotics Demo", controller, presentationViews);
 		
 		//expose as WS service
