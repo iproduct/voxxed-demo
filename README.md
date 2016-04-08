@@ -3,7 +3,7 @@ IPT + RoboLearn reactive java robotics demo for Voxxed Days Bucharest (March 201
 
 Demo presents ent-to-end reactive hot event stream processing of IPTPI robot sensor events using Spring Reactor library from server side and WebSocket with Angular 2 (TypeScript) and RxJS (RxNext) from client side. No web server needed - all resources as well as live WebSocket events are served by custom reactive HTTP endpoint using Reactor Net.
 
-The main application component class AppComponent is in src/main/webapp/app folder, together with custom reactive WebSocket implementation - IPTRxWebSocketSubject component. IPTRxWebSocketSubject is exposing WebSocket as RxJS bidirectional subject (by idea from RxDOM), plus reactive WebSocket open and close observers.
+The main application component class AppComponent is in src/main/webapp/app folder, together with custom reactive WebSocket implementation - IPTRxWebSocketSubject component. IPTRxWebSocketSubject is exposing WebSocket as RxJS bidirectional Subject (by idea from RxDOM), plus reactive WebSocket open and close observers.
 
 There are two types of clients - embedded client using Java Swing (whole screen mode) and mobile web client using Angular 2 (TypereScript) and RxJS:
 
