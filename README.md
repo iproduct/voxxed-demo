@@ -12,7 +12,7 @@ There are two types of clients - embedded client using Java Swing (whole screen 
  
 The main ng2 application component class AppComponent is in src/main/webapp/app folder, together with custom reactive WebSocket implementation - IPTRxWebSocketSubject component. IPTRxWebSocketSubject is exposing WebSocket as RxJS bidirectional subject (by idea from RxDOM), plus reactive WebSocket open and close observers.
 
-Server side is implemented using Reactor (http://projectreactor.io/) project. Main main class is org.iproduct.iptpi.demo.IPTPIVoxxedDemo in src/main/java folder. The network communication is implemented in class org.iproduct.iptpi.demo.net.PositionsWsService. It serves all resources required by the client using Reactor Net (Netty), and could be started as console application - no webserver required. Web sockect bi-directional communication is implemented in a reactive (and compact) way in getWsHandler() method.
+Server side is implemented using Reactor (http://projectreactor.io/) project. Main main class is org.iproduct.iptpi.demo.IPTPIVoxxedDemo in src/main/java folder. The network communication is implemented in class org.iproduct.iptpi.demo.net.PositionsWsService. It serves all resources required by the client using Reactor Net (Netty), and could be started as console application - no webserver required. WebSocket bi-directional communication is implemented in a reactive (and compact) way in getWsHandler() method.
 
 
 
