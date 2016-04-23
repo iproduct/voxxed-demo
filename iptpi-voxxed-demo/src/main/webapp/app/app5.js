@@ -50,7 +50,7 @@ var AppComponent = (function () {
             console.log('socket is about to close');
         });
         //Create WebSocket Subject
-        this.wsSubject = new ipt_rx_websocket_1.IPTRxWebSocketSubject('ws://172.22.0.68/ws', null, openSubscriber, closingSubscriber);
+        this.wsSubject = new ipt_rx_websocket_1.IPTRxWebSocketSubject('ws://192.168.1.202/ws', null, openSubscriber, closingSubscriber);
         this.wsSubject.subscribe(function (event) {
             var data = event;
             console.log("data: " + data);

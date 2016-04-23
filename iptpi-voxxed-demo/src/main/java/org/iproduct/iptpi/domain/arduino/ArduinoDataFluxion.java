@@ -17,12 +17,13 @@ import reactor.rx.Broadcaster;
 import reactor.rx.Fluxion;
 
 /**
- * This example code demonstrates how to perform serial communications using the
- * Raspberry Pi.
- * 
- * @author Robert Savage
+ * This class represents an event stream (Fluxion in Reactor terms) providing fluent API 
+ * for event transformations and allowing all interested consumenrs to listen for 
+ * EncoderReadings received from Arduino Leonardo USB connected microcontroller.
+ *  
+ * @author Trayan Iliev
  */
-public class ArduinoComFluxion extends Fluxion<EncoderReadings> {
+public class ArduinoDataFluxion extends Fluxion<EncoderReadings> {
 	
 	public final long START_ARDUINO_SERVICE_TIME;
 	public static final long ARDUNO_SERIAL_REPORT_PERIOD = 50; //ms
@@ -32,22 +33,12 @@ public class ArduinoComFluxion extends Fluxion<EncoderReadings> {
 	private final SignalEmitter<EncoderReadings> emitter;
 	private long numberReadings = 0;
 
-	public ArduinoComFluxion() {
+	public ArduinoDataFluxion() {
 		fluxion = Broadcaster.create();
 		emitter = fluxion.startEmitter();
-        
-		// !! ATTENTION !!
-        // By default, the serial port is configured as a console port 
-        // for interacting with the Linux OS shell.  If you want to use 
-        // the serial port in a software program, you must disable the 
-        // OS from using this port.  Please see this blog article by  
-        // Clayton Smith for step-by-step instructions on how to disable 
-        // the OS console for this port:
-        // http://www.irrational.net/2012/04/19/using-the-raspberry-pis-serial-port/
                 
-        System.out.println("<--Pi4J--> Serial Communication Example ... started.");
-        System.out.println(" ... connect using settings: 38400, N, 8, 1.");
-        System.out.println(" ... data received on serial port should be displayed below.");
+        System.out.println("Arduino serial communication started.");
+        System.out.println(" Connection settings: 38400, N, 8, 1.");
         
         // create an instance of the serial communications class
         final Serial serial = SerialFactory.createInstance();
@@ -91,43 +82,8 @@ public class ArduinoComFluxion extends Fluxion<EncoderReadings> {
         });
                 
         try {
-            // open the default serial port provided on the GPIO header
-//            serial.open(Serial.DEFAULT_COM_PORT, 38400);
-            try {
-				serial.open(PORT, 38400);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-            
-            // continuous loop to keep the program running until the user terminates the program
-//            for (;;) {
-//                try {
-//                    // write a formatted string to the serial transmit buffer
-//                    serial.write("CURRENT TIME: %s", new Date().toString());
-//    
-//                    // write a individual bytes to the serial transmit buffer
-//                    serial.write((byte) 13);
-//                    serial.write((byte) 10);
-//    
-//                    // write a simple string to the serial transmit buffer
-//                    serial.write("Second Line");
-//    
-//                    // write a individual characters to the serial transmit buffer
-//                    serial.write('\r');
-//                    serial.write('\n');
-//    
-//                    // write a string terminating with CR+LF to the serial transmit buffer
-//                    serial.writeln("Third Line");
-//                }
-//                catch(IllegalStateException ex){
-//                    ex.printStackTrace();                    
-//				}
-//                
-//                // wait 1 second before continuing
-//                Thread.sleep(1000);
-//            }
-            
-        } catch(SerialPortException ex) {
+			serial.open(PORT, 38400);
+        } catch(SerialPortException | IOException ex) {
             System.out.println(" ==>> SERIAL SETUP FAILED : " + ex.getMessage());
         }
 		START_ARDUINO_SERVICE_TIME  = System.currentTimeMillis();
@@ -144,4 +100,3 @@ public class ArduinoComFluxion extends Fluxion<EncoderReadings> {
 	}
 }
 
-// END SNIPPET: serial-snippet

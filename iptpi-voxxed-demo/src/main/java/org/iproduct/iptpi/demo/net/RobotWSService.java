@@ -27,7 +27,7 @@ import reactor.rx.net.NetStreams;
 import reactor.rx.net.http.ReactorHttpHandler;
 import reactor.rx.net.http.ReactorHttpServer;
 
-public class PositionsWsService {
+public class RobotWSService {
 	private ReactorHttpServer<Buffer, Buffer> httpServer;
 	private Environment env;
 	private Timer timer;
@@ -38,24 +38,10 @@ public class PositionsWsService {
 //	private EventBus serverReactor;
 	
 //	private final Map<String,String> cache = new HashMap<>();
-	private final Map<String,Integer> wishes = new ConcurrentHashMap<>();
-	Wish[] sampleWishes = {
-		new Wish("RxJava", 15 ),
-		new Wish("Reactor", 20 ),
-		new Wish("RxNext",  8 ),
-		new Wish("Angular 2", 5 ),
-		new Wish("React", 6 ),
-		new Wish("Spring Integration", 12),
-		new Wish("JavaEE 8 MVC 1.0", 3 ),
-		new Wish("JSONB & JSON-P",  9),
-		new Wish("CDI 2.0",  7),
-		new Wish("JSR 370 - JAX-RS 2.1", 15 ),
-		new Wish("Servlet 4.0 - HTTP/2", 21 )
-	};
 	private static final Charset UTF_8 = Charset.forName("utf-8");
 	private static final String GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 
-	public PositionsWsService(PositionFluxion positions, CommandMovementSubscriber movementSubscriber) {
+	public RobotWSService(PositionFluxion positions, CommandMovementSubscriber movementSubscriber) {
 		this.positions = positions;
 		this.movements = movementSubscriber;
 		try {
@@ -65,11 +51,6 @@ public class PositionsWsService {
 			movementCommands.subscribe(movementSubscriber);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
-		}
-		
-		//Initialize wish map with sample data
-		for(Wish wish :sampleWishes) {
-			wishes.put(wish.getTitle(), wish.getClicks());
 		}
 
 	}
@@ -83,7 +64,7 @@ public class PositionsWsService {
 		httpServer = NetStreams.<Buffer, Buffer>httpServer((HttpServerSpec<Buffer,Buffer> serverSpec) -> 
 			serverSpec
 //				.httpProcessor(CodecPreprocessor.from(StandardCodecs.STRING_CODEC))
-				.listen("172.22.0.68", 80) );
+				.listen("192.168.1.202", 80) );
 		httpServer.get("/", getStaticResourceHandler());
 		httpServer.get("/index.html", getStaticResourceHandler());
 		httpServer.get("/app/**", getStaticResourceHandler());
