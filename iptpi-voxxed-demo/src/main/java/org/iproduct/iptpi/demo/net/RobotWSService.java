@@ -9,7 +9,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.iproduct.iptpi.domain.Command;
-import org.iproduct.iptpi.domain.movement.CommandMovementSubscriber;
+import org.iproduct.iptpi.domain.movement.MovementCommandSubscriber;
 import org.iproduct.iptpi.domain.movement.Movement;
 import org.iproduct.iptpi.domain.position.PositionFluxion;
 import org.omg.CORBA.Environment;
@@ -33,7 +33,7 @@ public class RobotWSService {
 	private Timer timer;
 	private TopicProcessor<Command<Movement>> movementCommands;
 	private PositionFluxion positions;
-	private CommandMovementSubscriber movements;
+	private MovementCommandSubscriber movements;
 	private Gson gson = new Gson();
 //	private EventBus serverReactor;
 	
@@ -41,7 +41,7 @@ public class RobotWSService {
 	private static final Charset UTF_8 = Charset.forName("utf-8");
 	private static final String GUID = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 
-	public RobotWSService(PositionFluxion positions, CommandMovementSubscriber movementSubscriber) {
+	public RobotWSService(PositionFluxion positions, MovementCommandSubscriber movementSubscriber) {
 		this.positions = positions;
 		this.movements = movementSubscriber;
 		try {
@@ -64,7 +64,7 @@ public class RobotWSService {
 		httpServer = NetStreams.<Buffer, Buffer>httpServer((HttpServerSpec<Buffer,Buffer> serverSpec) -> 
 			serverSpec
 //				.httpProcessor(CodecPreprocessor.from(StandardCodecs.STRING_CODEC))
-				.listen("192.168.1.202", 80) );
+				.listen("192.168.0.102", 80) );
 		httpServer.get("/", getStaticResourceHandler());
 		httpServer.get("/index.html", getStaticResourceHandler());
 		httpServer.get("/app/**", getStaticResourceHandler());

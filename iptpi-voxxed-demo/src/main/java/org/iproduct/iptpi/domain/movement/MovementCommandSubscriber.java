@@ -18,7 +18,7 @@ import javax.swing.text.Highlighter.HighlightPainter;
 
 import static org.iproduct.iptpi.demo.robot.RobotParametrs.*;
 
-public class CommandMovementSubscriber extends ConsumerSubscriber<Command<Movement>>  {
+public class MovementCommandSubscriber extends ConsumerSubscriber<Command<Movement>>  {
 	public static final int MAX_SPEED = 1024;
 	public static final int CLOCK_DIVISOR = 2;
 	public static final double LANDING_CURVE_PARAMETER = 0.000000005;
@@ -28,7 +28,7 @@ public class CommandMovementSubscriber extends ConsumerSubscriber<Command<Moveme
 	private PositionFluxion positions;
 	private SchedulerGroup eventLoops = SchedulerGroup.async();
 	
-	public CommandMovementSubscriber(PositionFluxion positions) {
+	public MovementCommandSubscriber(PositionFluxion positions) {
 		this.positions = positions;
 		
 		// initialize wiringPi library

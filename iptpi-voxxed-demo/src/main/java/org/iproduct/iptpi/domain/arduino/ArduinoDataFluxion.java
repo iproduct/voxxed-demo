@@ -25,24 +25,24 @@ import reactor.rx.Fluxion;
  */
 public class ArduinoDataFluxion extends Fluxion<EncoderReadings> {
 	
-	public final long START_ARDUINO_SERVICE_TIME;
-	public static final long ARDUNO_SERIAL_REPORT_PERIOD = 50; //ms
-	public static final String PORT = "/dev/ttyACM0";
+//	public final long START_ARDUINO_SERVICE_TIME;
+	public static final long ARDUNO_SERIAL_REPORT_PERIOD = 100; //ms
 	protected static final byte IN_ENCODERS_POSITION = 1;
+	protected static final byte IN_LINE_READINGS = 2;
+	private final Serial serial;
 	private final Broadcaster<EncoderReadings> fluxion;
 	private final SignalEmitter<EncoderReadings> emitter;
 	private long numberReadings = 0;
 
-	public ArduinoDataFluxion() {
+	public ArduinoDataFluxion(Serial serial) {
+		this.serial = serial;
+		
 		fluxion = Broadcaster.create();
 		emitter = fluxion.startEmitter();
                 
         System.out.println("Arduino serial communication started.");
         System.out.println(" Connection settings: 38400, N, 8, 1.");
         
-        // create an instance of the serial communications class
-        final Serial serial = SerialFactory.createInstance();
-
         // create and register the serial data listener
         serial.addListener(new SerialDataEventListener() {
         	private ByteBuffer buffer = ByteBuffer.allocate(1024);
@@ -58,7 +58,7 @@ public class ArduinoDataFluxion extends Fluxion<EncoderReadings> {
 					while(buffer.hasRemaining() && hasMoreData) {
 						switch(buffer.get(buffer.position())) {
 						case IN_ENCODERS_POSITION:
-							if(buffer.remaining() >= 17) {
+							if(buffer.remaining() >= 13) {
 								buffer.get();
 								long timestamp = buffer.getInt(); //get timestamp
 								int encoderL = -buffer.getInt(); //two motors are mirrored
@@ -68,6 +68,25 @@ public class ArduinoDataFluxion extends Fluxion<EncoderReadings> {
 //										START_ARDUINO_SERVICE_TIME + (numberReadings++) * ARDUNO_SERIAL_REPORT_PERIOD);
 //								System.out.println(readings);
 								emitter.submit(readings); 
+							} else {
+								hasMoreData = false;
+							}
+							break;	
+					    case IN_LINE_READINGS:
+							if(buffer.remaining() >= 11) {
+								buffer.get();
+								long timestamp = buffer.getInt(); //get timestamp
+								int lineL = buffer.getShort(); //read left line sensor 
+								int lineM = buffer.getShort(); //read left line sensor 
+								int lineR = buffer.getShort(); //read left line sensor 
+								System.out.println("@@@@@@@@@@@@@ " + timestamp + " : " 
+										+ lineL + ", " + lineM + ", " + lineR
+										);
+//								EncoderReadings readings = new EncoderReadings(encoderR, encoderL, timestamp);
+	//							EncoderReadings readings = new EncoderReadings(encoderR, encoderL,
+	//									START_ARDUINO_SERVICE_TIME + (numberReadings++) * ARDUNO_SERIAL_REPORT_PERIOD);
+	//							System.out.println(readings);
+//								emitter.submit(readings); 
 							} else {
 								hasMoreData = false;
 							}
@@ -81,12 +100,7 @@ public class ArduinoDataFluxion extends Fluxion<EncoderReadings> {
             }
         });
                 
-        try {
-			serial.open(PORT, 38400);
-        } catch(SerialPortException | IOException ex) {
-            System.out.println(" ==>> SERIAL SETUP FAILED : " + ex.getMessage());
-        }
-		START_ARDUINO_SERVICE_TIME  = System.currentTimeMillis();
+//		START_ARDUINO_SERVICE_TIME  = System.currentTimeMillis();
 	}
 	
 	private int bytesToInt(byte[] bytes, int from) {

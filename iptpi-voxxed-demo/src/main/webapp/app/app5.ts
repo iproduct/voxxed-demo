@@ -145,7 +145,7 @@ class AppComponent {
 		});
 
 		//Create WebSocket Subject
-		this.wsSubject = new IPTRxWebSocketSubject('ws://192.168.0.108/ws', null,
+		this.wsSubject = new IPTRxWebSocketSubject('ws://192.168.0.102/ws', null,
 			openSubscriber, closingSubscriber);
 
 		this.wsSubject.subscribe(

@@ -1,5 +1,7 @@
 package org.iproduct.iptpi.demo;
+import static org.iproduct.iptpi.domain.arduino.ArduinoCommand.*;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,9 +10,10 @@ import javax.swing.JComponent;
 import org.iproduct.iptpi.demo.controller.RobotController;
 import org.iproduct.iptpi.demo.net.RobotWSService;
 import org.iproduct.iptpi.demo.view.RobotView;
-import org.iproduct.iptpi.domain.arduino.ArduinoDataFactory;
+import org.iproduct.iptpi.domain.arduino.ArduinoCommandSubscriber;
+import org.iproduct.iptpi.domain.arduino.ArduinoFactory;
 import org.iproduct.iptpi.domain.arduino.ArduinoDataFluxion;
-import org.iproduct.iptpi.domain.movement.CommandMovementSubscriber;
+import org.iproduct.iptpi.domain.movement.MovementCommandSubscriber;
 import org.iproduct.iptpi.domain.movement.MovementFactory;
 import org.iproduct.iptpi.domain.position.PositionFactory;
 import org.iproduct.iptpi.domain.position.PositionFluxion;
@@ -21,18 +24,19 @@ import reactor.core.util.Logger;
 public class IPTPIVoxxedDemo {
 	private RobotController controller;
 	private RobotView view;
-	private ArduinoDataFluxion arduino;
+	private ArduinoDataFluxion arduinoData;
+	private ArduinoCommandSubscriber arduinoCommnads;
 	private PositionFluxion positionsPub;
-	private CommandMovementSubscriber movementSub, movementSub2;
+	private MovementCommandSubscriber movementSub, movementSub2;
 	private List<JComponent> presentationViews = new ArrayList<>();
 	private RobotWSService positionsService;
 	
-	public IPTPIVoxxedDemo() {
+	public IPTPIVoxxedDemo() throws IOException {
 		//receive Arduino data readings
-		arduino = ArduinoDataFactory.createArduinoDataFluxion(); 
+		arduinoData = ArduinoFactory.getInstance().createArduinoDataFluxion(); 
 
 		//calculate robot positions
-		positionsPub = PositionFactory.createPositionFluxion(arduino);
+		positionsPub = PositionFactory.createPositionFluxion(arduinoData);
 		presentationViews.add(PositionFactory.createPositionPanel(positionsPub));
 		
 		//wire robot main controller with services
@@ -45,6 +49,15 @@ public class IPTPIVoxxedDemo {
 		//expose as WS service
 		movementSub2 = MovementFactory.createCommandMovementSubscriber(positionsPub);
 		positionsService = new RobotWSService(positionsPub, movementSub2);		
+		
+		//enable line follow sensor readings
+		arduinoCommnads = ArduinoFactory.getInstance().createArduinoCommandSubscriber();
+		arduinoCommnads.doNext(FOLLOW_LINE);
+		try {
+			Thread.sleep(3000);
+		} catch (InterruptedException e) {}
+		arduinoCommnads.doNext(NOT_FOLLOW_LINE);
+		
 	}
 	
 	public void tearDown(Integer exitStatus) {
@@ -59,6 +72,10 @@ public class IPTPIVoxxedDemo {
 	}
 	
 	public static void main(String[] args) {
-		IPTPIVoxxedDemo demo = new IPTPIVoxxedDemo();
+		try {
+			IPTPIVoxxedDemo demo = new IPTPIVoxxedDemo();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
